@@ -1,0 +1,266 @@
+
+KPI'S REQUIREMENTS
+
+1. Total Sales Analysis:
+
+Calculate the total sales for each respective month.
+
+Determine the month-on-month increase or decrease in sales.
+
+Calculate the difference in sales between the selected month and the previous month.
+
+
+2. Total Orders Analysis:
+
+Calculate the total number of orders for each respective month.
+
+Determine the month-on-month increase or decrease in the number of orders.
+
+Calculate the difference in the number of orders between the selected month and the previous month.
+
+
+3. Total Quantity Sold Analysis:
+
+Calculate the total quantity sold for each respective month.
+
+Determine the month-on-month increase or decrease in the total quantity sold.
+
+Calculate the difference in the total quantity sold between the selected month and the previous month.
+
+
+CHARTS REQUIREMENTS
+
+1. Calendar Heat Map:
+
+Implement a calendar heat map that dynamically adjusts based on the selected month from a slicer.
+
+Each day on the calendar will be color-coded to represent sales volume, with darker shades indicating higher sales.
+
+Implement tooltips to display detailed metrics (Sales, Orders, Quantity) when hovering over a specific day.
+
+
+2. Sales Analysis by Weekdays and Weekends:
+
+Segment sales data into weekdays and weekends to analyze performance variations.
+
+Provide insights into whether sales patterns differ significantly between weekdays and weekends.
+
+
+3. Sales Analysis by Store Location:
+
+Visualize sales data by different store locations.
+
+Include month-over-month (MoM) difference metrics based on the selected month in the slicer.
+
+Highlight MoM sales increase or decrease for each store location to identify trends.
+
+
+4. Daily Sales Analysis with Average Line:
+
+Display daily sales for the selected month with a line chart.
+
+Incorporate an average line on the chart to represent the average daily sales.
+
+Highlight bars exceeding or falling below the average sales to identify exceptional sales days.
+
+
+5. Sales Analysis by Product Category:
+
+Analyze sales performance across different product categories.
+
+Provide insights into which product categories contribute the most to overall sales.
+
+
+6. Top 10 Products by Sales:
+
+Identify and display the top 10 products based on sales volume.
+
+Allow users to quickly visualize the best-performing products in terms of sales.
+
+
+
+//Creating a Date Table//
+
+Date Table = CALENDAR(MIN(Transactions[transaction_date]), MAX(Transactions[transaction_date]))
+
+
+//New Column in Date Table//
+
+Month = FORMAT('Date Table'[Date], "mmm")
+
+
+//New Column in Date Table//
+
+Month Number = Month('Date Table'[Date])
+
+
+//New Colum in Transaction table//
+
+Sales = Transactions[unit_price] * Transactions[transaction_qty]
+
+
+//New Measure//
+
+Total Sales = SUM(Transaction[Sales])
+
+
+//New Column in Date Table//
+
+Month year = FORMAT('Date Table'[Date], "mmm yyyy")
+
+
+//New Measure//
+
+CM Sales = VAR selected_month = SELECTEDVALUE('Date Table'[Month])
+	    RETURN
+	    TOTALMTD(CALCULATE([Total Sales],  'Date Table'[Month] = selected_month, 'Date Table'[Date])
+
+
+//New Measure//
+
+PM Sales = CALCULATE([CM Sales], DATEADD('Date Table'[Date], -1, MONTH))
+
+
+//New Measure//
+
+MoM Growth & Diff Sales = 
+	VAR month_diff = [CM Sales] - [PM Sales]
+	VAR mom = ([CM Sales] - [PM Sales]) / [PM Sales])
+	VAR _sign = IF(month_diff > 0, "+" , "")
+	VAR _sign_trend = IF(month_diff > 0, "↑" , "↓")
+	RETURN
+		_sign_trend & " " & _sign & FORMAT(mom, #0.0%" & "|" & _sign & FORMAT(month_diff/1000, "0.0k")) & " " & "VS LM"
+
+
+//New Measure//
+
+Total Orders = DISTINCTCOUNT(Transactions[transaction_id])
+
+
+//New Measure//
+
+CM Orders = VAR selected_month = SELECTEDVALUE('Date Table'[Month])
+	    RETURN
+	    TOTALMTD(CALCULATE([Total Orders],  'Date Table'[Month] = selected_month, 'Date Table'[Date])
+
+
+//New Measure//
+
+PM Orders = CALCULATE([CM Orders], DATEADD('Date Table'[Date], -1, MONTH))
+
+
+//New Measure//
+
+MoM Growth & Diff Orders= 
+	VAR month_diff = [CM Orders] - [PM Orders]
+	VAR mom = ([CM Orders] - [PM Orders]) / [PM Orders])
+	VAR _sign = IF(month_diff > 0, "+" , "")
+	VAR _sign_trend = IF(month_diff > 0, "↑" , "↓")
+	RETURN
+		_sign_trend & " " & _sign & FORMAT(mom, #0.0%" & "|" & _sign & FORMAT(month_diff/1000, "0.0k")) & " " & "VS LM"
+
+
+//New Measure//
+
+Total Quantity = SUM(Transactions[transaction_qty])
+
+
+//New Measure//
+
+CM Quantity = VAR selected_month = SELECTEDVALUE('Date Table'[Month])
+	    RETURN
+	    TOTALMTD(CALCULATE([Total Quantity],  'Date Table'[Month] = selected_month, 'Date Table'[Date])
+
+//New Measure//
+
+PM Quantity = CALCULATE([CM Quantity], DATEADD('Date Table'[Date], -1, MONTH))
+
+
+//New Measure//
+
+MoM Growth & Diff Quantity= 
+	VAR month_diff = [CM Quantity] - [PM Quantity]
+	VAR mom = ([CM Quantity] - [PM Quantity]) / [PM Quantity])
+	VAR _sign = IF(month_diff > 0, "+" , "")
+	VAR _sign_trend = IF(month_diff > 0, "↑" , "↓")
+	RETURN
+		_sign_trend & " " & _sign & FORMAT(mom, #0.0%" & "|" & _sign & FORMAT(month_diff/1000, "0.0k")) & " " & "VS LM"
+
+
+//New Column in Date table//
+
+Day Name = FORMAT('Date Table'[Date], "DDD")
+
+
+//New Column in Date table//
+
+Week Number = WEEKNUM('Date Table'[Date], 2)
+
+
+//New Column in Date table//
+
+Day Number = FORMAT('Date Table'[Date], "D")
+
+
+//New Column in Date table//
+
+Week Day Number = WEEKDAY('Date Table'[Date], 2)
+
+
+//New Column in Date table//
+
+Weekday / Weekend = IF('Date Table'[Day Name] = "Sat" || 'Date Table'[Day Name] = "Sun", "Weekend", "Weekday")
+
+
+//New Measure//
+
+Label for Store Location = SELECTEDVALUE(Transactions[store_location]) & " | " FORMAT([Total Sales]/1000, "$0.00K")
+
+
+//New Measure//
+
+Daily Avg Sales = AVERAGEX(ALLSELECTED(Transactions[transaction_date]), [Total Sales])
+
+
+//New Measure//
+
+Colour for Bars = IF([Total Sales] > [Daily Avg Sales] , "Above Average", "Below Average")
+
+
+//New Measure//
+
+Label for Product Category = SELECTEDVALUE(Transactions[product_category]) & " | " FORMAT([Total Sales]/1000, "$0.00K")
+
+
+//New Measure//
+
+New MoM label = 
+	VAR month_diff = [CM Sales] - [PM Sales]
+	VAR mom = ([CM Sales] - [PM Sales]) / [PM Sales])
+	VAR _sign = IF(month_diff > 0, "+" , "")
+	VAR _sign_trend = IF(month_diff > 0, "↑" , "↓")
+	RETURN
+		_sign_trend & " " & _sign & FORMAT(mom, #0.0%")
+
+
+//New Measure//
+
+Label for Product Type= SELECTEDVALUE(Transactions[product_type]) & " | " FORMAT([Total Sales]/1000, "$0.00K")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

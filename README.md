@@ -97,4 +97,4 @@ The dashboard dynamically updates based on user slicer selections (e.g., selecte
 ├── Assets/
 │   └── [CoffeeShopSales Dashboard.pdf] | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/CoffeeShopSales%20Dashboard.pdf) |    
 └── DAX/
-    └── [powerBI_Documentation.txt]           #DAX measures used
+    └── [powerBI_Documentation.txt]  | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/PowerBI_Documentation.txt)                  | #DAX measures used

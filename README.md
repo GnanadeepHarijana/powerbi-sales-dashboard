@@ -91,7 +91,7 @@ The dashboard dynamically updates based on user slicer selections (e.g., selecte
 ```bash
 .
 ├── README.md
-├── [CoffeeShopSales Dashboard.pbix]              # Main Power BI file
+├── [CoffeeShopSales Dashboard.pbix] | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/CoffeeShopSales%20Dashboard.pbix)            # Main Power BI file
 ├── Data/
 │   └── [RAW_DATA CoffeShopSales.xlsx]        # Sample or real transaction data
 ├── Assets/

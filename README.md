@@ -93,7 +93,7 @@ The dashboard dynamically updates based on user slicer selections (e.g., selecte
 ├── README.md
 ├── [CoffeeShopSales Dashboard.pbix] | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/CoffeeShopSales%20Dashboard.pbix)  |          # Main Power BI file
 ├── Data/
-│   └── [RAW_DATA CoffeShopSales.xlsx]        # Sample or real transaction data
+│   └── [RAW_DATA CoffeShopSales.xlsx]  | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/RAW_DATA%20CoffeeShopSales.xlsx) |      # Sample or real transaction data
 ├── Assets/
 │   └── [CoffeeShopSales Dashboard.pdf] | (https://github.com/GnanadeepHarijana/powerbi-sales-dashboard/blob/main/CoffeeShopSales%20Dashboard.pdf) |    
 └── DAX/
